@@ -1,0 +1,107 @@
+Sure, I can explain how you can solve this problem in Java, step by step. We will use a common approach called backtracking to generate all possible permutations of a given list of numbers. Here's how you can do it:
+
+Understand the Problem: You need to generate all permutations of a given list of distinct numbers. A permutation is a rearrangement of elements in a specific order.
+Steps to Approach
+Initialization:
+
+Start with a list of numbers (nums).
+Initialize an empty list (result) to store all permutations.
+Use a helper function that will be called recursively to generate the permutations.
+Backtracking:
+
+Backtracking involves recursively building permutations by adding one element at a time and removing it once all possibilities for that element are exhausted.
+Implementation:
+
+Use a helper method that takes the current list, the result list, and tracks the indices of elements being used.
+For each call, add the current element, move on to the next level, and then backtrack to remove the element after all possibilities are explored.
+Java Code for the Solution:
+Here is the Java implementation of the solution:
+
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Permutations {
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>(); // To store the result
+        List<Integer> current = new ArrayList<>(); // To track current permutation
+        boolean[] used = new boolean[nums.length]; // To track which elements are used
+
+        backtrack(nums, current, result, used);
+        return result;
+    }
+
+    private void backtrack(int[] nums, List<Integer> current, List<List<Integer>> result, boolean[] used) {
+        // Base case: If the current list has the same length as nums, a full permutation is formed
+        if (current.size() == nums.length) {
+            result.add(new ArrayList<>(current)); // Add a copy of the current list to result
+            return;
+        }
+
+        // Recursively add elements that are not yet used
+        for (int i = 0; i < nums.length; i++) {
+            if (used[i]) continue; // Skip already used elements
+
+            current.add(nums[i]); // Choose the element
+            used[i] = true; // Mark as used
+
+            // Recursively call backtrack to explore more options
+            backtrack(nums, current, result, used);
+
+            // Backtrack: Undo the choice to explore other possibilities
+            current.remove(current.size() - 1);
+            used[i] = false;
+        }
+    }
+
+    // Test the implementation
+    public static void main(String[] args) {
+        Permutations permutations = new Permutations();
+        int[] nums1 = {1, 2, 3};
+        int[] nums2 = {0, 1};
+
+        System.out.println("Permutations of [1, 2, 3]: " + permutations.permute(nums1));
+        System.out.println("Permutations of [0, 1]: " + permutations.permute(nums2));
+    }
+}
+Step-by-Step Explanation:
+Initial Setup:
+
+Create an instance of List<List<Integer>> result to store the final list of permutations.
+Create a List<Integer> current to keep track of the elements of the current permutation.
+Create a boolean[] used array to track which elements have been used in the current permutation.
+Backtrack Function:
+
+The backtrack method is called with the input array, current list, result list, and the used boolean array.
+Base Case: If the current list has the same length as the input array (nums), it means we have a valid permutation, so we add it to the result.
+Recursive Step:
+Loop through all elements of the nums array.
+If an element is not used (used[i] == false), add it to the current list and mark it as used (used[i] = true).
+Recursively call backtrack to continue building the permutation.
+After finishing all recursive calls involving the current element, backtrack by removing the element (current.remove(current.size() - 1)) and marking it as unused (used[i] = false).
+Time Complexity:
+
+The time complexity for generating all permutations of a list of length n is O(n * n!).
+n! permutations are generated, and for each permutation, you have to make a full copy of the list, resulting in n * n! total operations.
+Example Walkthrough:
+Consider nums = [1, 2, 3]:
+
+Initially, current is empty, and used = [false, false, false].
+You start by adding 1:
+Current: [1], Used: [true, false, false]
+Add 2:
+Current: [1, 2], Used: [true, true, false]
+Add 3:
+Current: [1, 2, 3], Used: [true, true, true]
+This is a complete permutation, add it to result.
+Backtrack: Remove 3, mark 3 as unused.
+Backtrack: Remove 2, mark 2 as unused.
+Then add 3, and repeat.
+This process continues until all possible arrangements are explored.
+
+Output:
+The output for the given examples would be:
+
+nums = [1, 2, 3]: [[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]
+nums = [0, 1]: [[0, 1], [1, 0]]
+This approach ensures that every possible ordering is generated without duplication, and is well-suited for permutations problems in general.
